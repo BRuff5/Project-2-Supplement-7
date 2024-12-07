@@ -1,50 +1,53 @@
 import org.junit.*;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.File;
 import java.io.IOException;
 
 public class MainTest {
 
-    private static final String FILENAME = "test_example.txt";
-
-    //BeforeEach
-    public void setUp() {
-        // Any setup can go here
-    }
-
-    //AfterEach
-    public void tearDown() {
-        // Clean up the file after each test
-        java.io.File file = new java.io.File(FILENAME);
-        if (file.exists()) {
-            file.delete();
-        }
-    }
+    private final String testFilename = "testCollege101.txt";
+    private final String testContent = "This is my college advice: \nGet good grades\nHave fun\nGraduate on time";
 
     //Test
     public void testCreateAndWriteFile() throws IOException {
-        String content = "This is the test content.";
+        // Call the method to create and write to the file
+        main.createAndWriteFile(testFilename, testContent);
         
-        // Call the method to test
-        main.createAndWriteFile(FILENAME, content);
+        // Verify that the file is created
+        File file = new File(testFilename);
+        assertTrue("File should be created", file.exists());
+        
+        // Verify the content of the file
+        String content = main.readFile(testFilename);
+        assertEquals("Content should match the expected content", testContent.trim(), content);
+    }
 
-        // Verify the file is created
-        java.io.File file = new java.io.File(FILENAME);
-        assertTrue(file.exists(), "File should be created.");
+    //Test
+    public void testReadFile() throws IOException {
+        // Create the file first
+        main.createAndWriteFile(testFilename, testContent);
+        
+        // Now read the file
+        String content = main.readFile(testFilename);
+        
+        // Ensure the content is as expected
+        assertEquals("Content should match the expected content", testContent.trim(), content);
+    }
 
-        // Verify the content is written correctly
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line = reader.readLine();
-            assertEquals(content, line, "The content in the file should match the expected content.");
+    // Cleanup test file after tests are run
+    //Test
+    public void cleanup() {
+        File file = new File(testFilename);
+        if (file.exists()) {
+            file.delete(); // Delete the test file after tests
         }
     }
 
-    private void assertTrue(boolean exists, String file_should_be_created) {
+    private void assertTrue(String file_should_be_created, boolean exists) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    private void assertEquals(String content, String line, String the_content_in_the_file_should_match_the_) {
+    private void assertEquals(String content_should_match_the_expected_content, String trim, String content) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
