@@ -28,7 +28,7 @@ public class main {
      * @return A string containing content
      * @throws IOException Error
      */
-    
+
     public static String readFile(String filename) throws IOException {
         StringBuilder content = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
@@ -38,6 +38,20 @@ public class main {
             }
         }
         return content.toString().trim();
+    }
+
+    /**
+     * Appends the given content to the specified file.
+     * 
+     * @param filename The name of the file 
+     * @param content  to append
+     * @throws IOException IError
+     */
+    public static void appendToFile(String filename, String content) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
+            writer.write(content);
+            writer.newLine(); //
+        }
     }
 
     public static void main(String[] args) {
@@ -51,6 +65,14 @@ public class main {
             //Read file
             String fileContent = readFile(filename);
             System.out.println("File content:\n" + fileContent);
+
+            // Test appending to the file
+            appendToFile(filename, "\nOne last thing: program TERMINATED");
+            System.out.println("Appended successfull!!");
+
+            // Verify the content after appending
+            String updatedContent = readFile(filename);
+            System.out.println("Updated file content:\n" + updatedContent);
 
         } catch (IOException e) {
             System.err.println("An error occurred: " + e.getMessage());

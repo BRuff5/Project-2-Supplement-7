@@ -1,53 +1,67 @@
-import org.junit.*;
-
+import static org.junit.Assert.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 
 public class MainTest {
 
-    private final String testFilename = "testCollege101.txt";
-    private final String testContent = "This is my college advice: \nGet good grades\nHave fun\nGraduate on time";
+    private static final String TEST_FILENAME = "TestCollege101.txt";
+    private static final String CONTENT = "This is my college advice: \nGet good grades\nHave Fun\nGraduate on time";
+    private static final String APPEND_CONTENT = "\nOne last thing: program TERMINATED";
 
-    //Test
+    @Before
+    public void setUp() throws Exception {
+        // Ensure the file is created fresh for each test
+        Main.createAndWriteFile(TEST_FILENAME, CONTENT);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        // Clean up the test file after each test
+        File file = new File(TEST_FILENAME);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
+    @Test
     public void testCreateAndWriteFile() throws IOException {
-        // Call the method to create and write to the file
-        main.createAndWriteFile(testFilename, testContent);
-        
-        // Verify that the file is created
-        File file = new File(testFilename);
+        // Check if the file exists
+        File file = new File(TEST_FILENAME);
         assertTrue("File should be created", file.exists());
         
-        // Verify the content of the file
-        String content = main.readFile(testFilename);
-        assertEquals("Content should match the expected content", testContent.trim(), content);
+        // Read the content and check if it matches what was written
+        String readContent = main.readFile(TEST_FILENAME);
+        assertEquals("Content should match", CONTENT.trim(), readContent);
     }
 
-    //Test
+    @Test
+    public void testAppendToFile() throws IOException {
+        // Append content to the file
+        main.appendToFile(TEST_FILENAME, APPEND_CONTENT);
+
+        // Read the updated content
+        String updatedContent = main.readFile(TEST_FILENAME);
+
+        // Check if the content was appended correctly
+        String expectedContent = CONTENT.trim() + APPEND_CONTENT.trim();
+        assertEquals("Updated content should match", expectedContent, updatedContent);
+    }
+
+    @Test
     public void testReadFile() throws IOException {
-        // Create the file first
-        main.createAndWriteFile(testFilename, testContent);
-        
-        // Now read the file
-        String content = main.readFile(testFilename);
-        
-        // Ensure the content is as expected
-        assertEquals("Content should match the expected content", testContent.trim(), content);
-    }
-
-    // Cleanup test file after tests are run
-    //Test
-    public void cleanup() {
-        File file = new File(testFilename);
-        if (file.exists()) {
-            file.delete(); // Delete the test file after tests
-        }
+        // Read the initial content from the file
+        String readContent = main.readFile(TEST_FILENAME);
+        assertEquals("Content should match initial write", CONTENT.trim(), readContent);
     }
 
     private void assertTrue(String file_should_be_created, boolean exists) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    private void assertEquals(String content_should_match_the_expected_content, String trim, String content) {
+    private void assertEquals(String content_should_match, String trim, String readContent) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
